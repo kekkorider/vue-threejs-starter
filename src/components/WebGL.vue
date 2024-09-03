@@ -10,17 +10,13 @@
 <script setup>
 import { shallowRef, onMounted, nextTick, watch } from 'vue'
 import { useWindowSize, useDevicePixelRatio } from '@vueuse/core'
-import {
-	Scene,
-	PerspectiveCamera,
-	Mesh,
-	BoxGeometry,
-	MeshBasicMaterial,
-} from 'three'
+import { Scene, PerspectiveCamera, Mesh, BoxGeometry } from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
+import { SampleTSLMaterial } from '@/assets/materials'
+import '@/assets/Debug'
 
 const canvasRef = shallowRef(null)
 let scene, camera, renderer, mesh, controls
@@ -83,7 +79,7 @@ function createCamera() {
 		0.1,
 		100
 	)
-	camera.position.set(0, 0, 5)
+	camera.position.set(0, 0, 2.5)
 }
 
 function createRenderer() {
@@ -104,7 +100,7 @@ function createControls() {
 
 function createMesh() {
 	const geometry = new BoxGeometry()
-	const material = new MeshBasicMaterial({ color: 0x00ff00 })
+	const material = SampleTSLMaterial
 	mesh = new Mesh(geometry, material)
 
 	scene.add(mesh)

@@ -1,3 +1,5 @@
-<template>
-	<p>App goes here</p>
-</template>
+<template><WebGL /></template>
+
+<script setup>
+import WebGL from '@/components/WebGL.vue'
+</script>

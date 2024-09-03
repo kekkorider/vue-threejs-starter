@@ -16,6 +16,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
 import { SampleTSLMaterial } from '@/assets/materials'
+import { gltfLoader } from '@/assets/loaders'
 import '@/assets/Debug'
 
 const canvasRef = shallowRef(null)
@@ -37,6 +38,8 @@ onMounted(async () => {
 	createRenderer()
 
 	createMesh()
+
+	await loadModel()
 
 	createControls()
 
@@ -93,6 +96,16 @@ function createRenderer() {
 	renderer.setSize(windowWidth.value, windowHeight.value)
 }
 
+async function loadModel() {
+	const gltf = await gltfLoader.load('/monkey.glb')
+	const model = gltf.scene.getObjectByName('Suzanne')
+
+	model.material = SampleTSLMaterial
+	model.position.x = 1
+
+	scene.add(model)
+}
+
 function createControls() {
 	controls = new OrbitControls(camera, renderer.domElement)
 	controls.enableDamping = true
@@ -101,7 +114,9 @@ function createControls() {
 function createMesh() {
 	const geometry = new BoxGeometry()
 	const material = SampleTSLMaterial
+
 	mesh = new Mesh(geometry, material)
+	mesh.position.x = -1
 
 	scene.add(mesh)
 }

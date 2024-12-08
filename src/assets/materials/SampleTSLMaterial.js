@@ -1,4 +1,5 @@
-import { MeshBasicNodeMaterial, uv, Fn, vec4, positionLocal, uniform } from 'three/tsl'
+import { uv, Fn, vec4, positionLocal, uniform } from 'three/tsl'
+import { MeshBasicNodeMaterial } from 'three/webgpu'
 
 export const SampleTSLMaterial = new MeshBasicNodeMaterial()
 

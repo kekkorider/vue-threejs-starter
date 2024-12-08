@@ -17,7 +17,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { useGSAP } from '@/composables/useGSAP'
 import { SampleTSLMaterial } from '@/assets/materials'
 import { gltfLoader } from '@/assets/loaders'
-import '@/assets/Debug'
 
 const canvasRef = shallowRef(null)
 let scene, camera, renderer, mesh, controls
@@ -47,6 +46,11 @@ onMounted(async () => {
 		updateScene(time)
 		renderer.renderAsync(scene, camera)
 	})
+
+	const url = new URL(window.location.href)
+	if (url.searchParams.get('debug') !== null) {
+		await import('@/assets/Debug')
+	}
 })
 
 //

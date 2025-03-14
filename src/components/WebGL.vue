@@ -12,7 +12,7 @@ import { shallowRef, onMounted, nextTick, watch } from 'vue'
 import { useWindowSize, useDevicePixelRatio } from '@vueuse/core'
 import { Scene, PerspectiveCamera, Mesh, BoxGeometry } from 'three'
 import { WebGPURenderer } from 'three/webgpu'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
 import { SampleTSLMaterial } from '@/assets/materials'

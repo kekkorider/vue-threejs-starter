@@ -1,15 +1,20 @@
 <template>
 	<canvas
 		class="canvas"
-		ref="canvasRef"
+		ref="canvas"
 		:width="windowWidth"
 		:height="windowHeight"
 	/>
 </template>
 
 <script setup>
-import { shallowRef, onMounted, nextTick, watch } from 'vue'
-import { useWindowSize, useDevicePixelRatio } from '@vueuse/core'
+import { useTemplateRef, onMounted, nextTick, watch } from 'vue'
+import {
+	useWindowSize,
+	useDevicePixelRatio,
+	useUrlSearchParams,
+	get,
+} from '@vueuse/core'
 import { Scene, PerspectiveCamera, Mesh, BoxGeometry } from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
@@ -18,11 +23,12 @@ import { useGSAP } from '@/composables/useGSAP'
 import { SampleTSLMaterial } from '@/assets/materials'
 import { gltfLoader } from '@/assets/loaders'
 
-const canvasRef = shallowRef(null)
+const canvasRef = useTemplateRef('canvas')
 let scene, camera, renderer, mesh, controls
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
+const params = useUrlSearchParams('history')
 
 const { gsap } = useGSAP()
 
@@ -47,8 +53,7 @@ onMounted(async () => {
 		renderer.renderAsync(scene, camera)
 	})
 
-	const url = new URL(window.location.href)
-	if (url.searchParams.get('debug') !== null) {
+	if (Object.hasOwn(params, 'debug')) {
 		await import('@/assets/Debug')
 	}
 })
@@ -81,23 +86,24 @@ function createScene() {
 
 function createCamera() {
 	camera = new PerspectiveCamera(
-		75,
-		windowWidth.value / windowHeight.value,
+		40,
+		get(windowWidth) / get(windowHeight),
 		0.1,
 		100
 	)
-	camera.position.set(0, 0, 2.5)
+
+	camera.position.set(0, 0, 4)
 }
 
 function createRenderer() {
 	renderer = new WebGPURenderer({
-		canvas: canvasRef.value,
+		canvas: get(canvasRef),
 		alpha: true,
-		antialias: dpr.value === 1,
+		antialias: get(dpr) === 1,
 	})
 
 	renderer.setClearColor(0x121212, 1)
-	renderer.setSize(windowWidth.value, windowHeight.value)
+	renderer.setSize(get(windowWidth), get(windowHeight))
 }
 
 async function loadModel() {

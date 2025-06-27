@@ -15,7 +15,7 @@ import {
 	useUrlSearchParams,
 	get,
 } from '@vueuse/core'
-import { Scene, PerspectiveCamera, Mesh, BoxGeometry } from 'three'
+import * as THREE from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
@@ -24,7 +24,7 @@ import { SampleTSLMaterial } from '@/assets/materials'
 import { gltfLoader } from '@/assets/loaders'
 
 const canvasRef = useTemplateRef('canvas')
-let scene, camera, renderer, mesh, controls
+let perfPanel, scene, camera, renderer, mesh, controls
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
@@ -48,13 +48,30 @@ onMounted(async () => {
 
 	createControls()
 
+	gsap.ticker.fps(60)
+
 	gsap.ticker.add(time => {
+		perfPanel?.begin()
+
 		updateScene(time)
 		renderer.renderAsync(scene, camera)
+
+		perfPanel?.end()
 	})
 
 	if (Object.hasOwn(params, 'debug')) {
 		await import('@/assets/Debug')
+
+		if (!renderer.isWebGPURenderer) {
+			const { ThreePerf } = await import('three-perf')
+
+			perfPanel = new ThreePerf({
+				anchorX: 'left',
+				anchorY: 'top',
+				domElement: document.body,
+				renderer,
+			})
+		}
 	}
 })
 
@@ -81,11 +98,11 @@ function updateScene(time = 0) {
 }
 
 function createScene() {
-	scene = new Scene()
+	scene = new THREE.Scene()
 }
 
 function createCamera() {
-	camera = new PerspectiveCamera(
+	camera = new THREE.PerspectiveCamera(
 		40,
 		get(windowWidth) / get(windowHeight),
 		0.1,
@@ -122,10 +139,10 @@ function createControls() {
 }
 
 function createMesh() {
-	const geometry = new BoxGeometry()
+	const geometry = new THREE.BoxGeometry()
 	const material = SampleTSLMaterial
 
-	mesh = new Mesh(geometry, material)
+	mesh = new THREE.Mesh(geometry, material)
 	mesh.position.x = -1
 
 	scene.add(mesh)

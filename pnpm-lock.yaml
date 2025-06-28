@@ -39,6 +39,9 @@ importers:
       vite:
         specifier: ^7.0.0
         version: 7.0.0
+      vite-plugin-glsl:
+        specifier: ^1.5.1
+        version: 1.5.1(rollup@4.44.1)(vite@7.0.0)
       vite-plugin-top-level-await:
         specifier: ^1.5.0
         version: 1.5.0(rollup@4.44.1)(vite@7.0.0)
@@ -223,6 +226,15 @@ packages:
 
   '@rollup/plugin-virtual@3.0.2':
     resolution: {integrity: sha512-10monEYsBp3scM4/ND4LNH5Rxvh3e/cVeL3jWTgZ2SrQ+BmUoQcopVQvnaMcOnykb1VkxUFuDAN+0FnpTFRy2A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+
+  '@rollup/pluginutils@5.2.0':
+    resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
@@ -594,6 +606,12 @@ packages:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
     hasBin: true
 
+  vite-plugin-glsl@1.5.1:
+    resolution: {integrity: sha512-kFI8rUItruG2Dfltyhr6tP3jlgCBGda2TnIvUodBHbpdQ7KT0NWyKpS1EqV47DoAl4woKzer7GWd1fiEvzf4nQ==}
+    engines: {node: '>= 20.17.0', npm: '>= 10.8.3'}
+    peerDependencies:
+      vite: '>= 3.x'
+
   vite-plugin-top-level-await@1.5.0:
     resolution: {integrity: sha512-r/DtuvHrSqUVk23XpG2cl8gjt1aATMG5cjExXL1BUTcSNab6CzkcPua9BPEc9fuTP5UpwClCxUe3+dNGL0yrgQ==}
     peerDependencies:
@@ -747,6 +765,14 @@ snapshots:
   '@rolldown/pluginutils@1.0.0-beta.19': {}
 
   '@rollup/plugin-virtual@3.0.2(rollup@4.44.1)':
+    optionalDependencies:
+      rollup: 4.44.1
+
+  '@rollup/pluginutils@5.2.0(rollup@4.44.1)':
+    dependencies:
+      '@types/estree': 1.0.8
+      estree-walker: 2.0.2
+      picomatch: 4.0.2
     optionalDependencies:
       rollup: 4.44.1
 
@@ -1096,6 +1122,13 @@ snapshots:
   tweakpane@4.0.5: {}
 
   uuid@10.0.0: {}
+
+  vite-plugin-glsl@1.5.1(rollup@4.44.1)(vite@7.0.0):
+    dependencies:
+      '@rollup/pluginutils': 5.2.0(rollup@4.44.1)
+      vite: 7.0.0
+    transitivePeerDependencies:
+      - rollup
 
   vite-plugin-top-level-await@1.5.0(rollup@4.44.1)(vite@7.0.0):
     dependencies:

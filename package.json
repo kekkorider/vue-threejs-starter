@@ -12,15 +12,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vueuse/core": "^13.3.0",
+    "@vueuse/core": "^13.6.0",
     "gsap": "^3.13.0",
-    "three": "^0.177.0",
+    "three": "^0.178.0",
     "tweakpane": "^4.0.5",
-    "vue": "^3.5.15"
+    "vue": "^3.5.18"
   },
   "devDependencies": {
     "@tweakpane/core": "^2.0.5",
-    "@types/three": "^0.177.0",
+    "@types/three": "^0.178.1",
     "@vitejs/plugin-vue": "^6.0.0",
     "three-perf": "^1.0.11",
     "vite": "^7.0.0",

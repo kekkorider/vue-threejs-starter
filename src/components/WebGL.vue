@@ -15,8 +15,7 @@ import {
 	useUrlSearchParams,
 	get,
 } from '@vueuse/core'
-import * as THREE from 'three'
-import { WebGPURenderer } from 'three/webgpu'
+import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
@@ -40,7 +39,7 @@ onMounted(async () => {
 
 	createScene()
 	createCamera()
-	createRenderer()
+	await createRenderer()
 
 	createMesh()
 
@@ -54,7 +53,7 @@ onMounted(async () => {
 		perfPanel?.begin()
 
 		updateScene(time)
-		renderer.renderAsync(scene, camera)
+		renderer.render(scene, camera)
 
 		perfPanel?.end()
 	})
@@ -93,7 +92,7 @@ watch([windowWidth, windowHeight], value => {
 // Methods
 //
 function updateScene(time = 0) {
-	controls.update()
+	controls?.update()
 	mesh.rotation.set(time * 0.2, time * 0.13, time * 0.17)
 }
 
@@ -112,15 +111,18 @@ function createCamera() {
 	camera.position.set(0, 0, 4)
 }
 
-function createRenderer() {
-	renderer = new WebGPURenderer({
+async function createRenderer() {
+	renderer = new THREE.WebGPURenderer({
 		canvas: get(canvasRef),
 		alpha: true,
-		antialias: get(dpr) === 1,
+		antialias: true,
+		powerPreference: 'high-performance',
 	})
 
 	renderer.setClearColor(0x121212, 1)
 	renderer.setSize(get(windowWidth), get(windowHeight))
+
+	await renderer.init()
 }
 
 async function loadModel() {

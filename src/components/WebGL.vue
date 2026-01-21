@@ -105,7 +105,7 @@ function createCamera() {
 		40,
 		get(windowWidth) / get(windowHeight),
 		0.1,
-		100
+		100,
 	)
 
 	camera.position.set(0, 0, 4)
@@ -121,6 +121,12 @@ async function createRenderer() {
 
 	renderer.setClearColor(0x121212, 1)
 	renderer.setSize(get(windowWidth), get(windowHeight))
+
+	if (Object.hasOwn(params, 'debug')) {
+		const { Inspector } = await import('three/addons/inspector/Inspector')
+
+		renderer.inspector = new Inspector()
+	}
 
 	await renderer.init()
 }

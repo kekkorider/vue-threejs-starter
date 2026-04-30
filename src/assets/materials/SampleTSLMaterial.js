@@ -1,4 +1,4 @@
-import { normalView, Fn, vec4, positionLocal, uniform } from 'three/tsl'
+import { Fn, positionLocal, uniform } from 'three/tsl'
 import { MeshBasicNodeMaterial } from 'three/webgpu'
 
 export const SampleTSLMaterial = new MeshBasicNodeMaterial()
@@ -10,5 +10,5 @@ SampleTSLMaterial.positionNode = Fn(() => {
 })()
 
 SampleTSLMaterial.colorNode = Fn(() => {
-  return vec4(normalView, 1.0)
+  return positionLocal
 })()

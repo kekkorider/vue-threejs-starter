@@ -12,19 +12,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vueuse/core": "^14.1.0",
-    "gsap": "^3.14.2",
-    "three": "^0.182.0",
+    "@vueuse/core": "^14.2.1",
+    "gsap": "^3.15.0",
+    "three": "^0.184.0",
     "tweakpane": "^4.0.5",
-    "vue": "^3.5.27"
+    "vue": "^3.5.33"
   },
   "devDependencies": {
     "@tweakpane/core": "^2.0.5",
-    "@types/three": "^0.182.0",
-    "@vitejs/plugin-vue": "^6.0.3",
+    "@types/three": "^0.184.0",
+    "@vitejs/plugin-vue": "^6.0.6",
     "three-perf": "^1.0.11",
-    "vite": "^7.3.1",
-    "vite-plugin-glsl": "^1.5.5",
+    "vite": "^8.0.10",
+    "vite-plugin-glsl": "^1.6.0",
     "vite-plugin-top-level-await": "^1.6.0"
   }
 }

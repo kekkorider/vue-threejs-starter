@@ -16,6 +16,15 @@ import {
 	get,
 } from '@vueuse/core'
 import * as THREE from 'three/webgpu'
+import {
+	mrt,
+	output,
+	pass,
+	float,
+	packNormalToRGB,
+	normalView,
+	velocity,
+} from 'three/tsl'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
@@ -23,7 +32,7 @@ import { SampleTSLMaterial } from '@/assets/materials'
 import { gltfLoader } from '@/assets/loaders'
 
 const canvasRef = useTemplateRef('canvas')
-let perfPanel, scene, camera, renderer, mesh, controls
+let perfPanel, scene, camera, renderer, mesh, controls, renderPipeline
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
@@ -40,6 +49,7 @@ onMounted(async () => {
 	createScene()
 	createCamera()
 	await createRenderer()
+	createPostProcess()
 
 	createMesh()
 
@@ -49,11 +59,11 @@ onMounted(async () => {
 
 	gsap.ticker.fps(60)
 
-	gsap.ticker.add(time => {
+	renderer.setAnimationLoop(time => {
 		perfPanel?.begin()
 
-		updateScene(time)
-		renderer.render(scene, camera)
+		updateScene(time * 0.001)
+		renderPipeline.render()
 
 		perfPanel?.end()
 	})
@@ -129,6 +139,42 @@ async function createRenderer() {
 	}
 
 	await renderer.init()
+}
+
+function createPostProcess() {
+	renderPipeline = new THREE.RenderPipeline(renderer)
+	renderPipeline.outputColorTransform = false
+
+	const scenePass = pass(scene, camera)
+	scenePass.setMRT(
+		mrt({
+			output,
+			velocity,
+			normal: packNormalToRGB(normalView),
+			toon: packNormalToRGB(normalView).step(0.5),
+		}),
+	)
+
+	const scenePassColor = scenePass.getTextureNode('output').toInspector('Color')
+	const scenePassNormal = scenePass
+		.getTextureNode('normal')
+		.toInspector('Normal')
+	const scenePassDepth = scenePass
+		.getTextureNode('depth')
+		.toInspector('Depth', () => scenePass.getLinearDepthNode())
+	const scenePassVelocity = scenePass
+		.getTextureNode('velocity')
+		.toInspector('Velocity')
+
+	const scenePassToon = scenePass.getTextureNode('toon').toInspector('Toon')
+
+	// Keep depth/velocity in the render graph so their inspector nodes update each frame.
+	const zero = float(0)
+	renderPipeline.outputNode = scenePassColor
+		.add(scenePassToon.mul(zero))
+		.add(scenePassNormal.mul(zero))
+		.add(scenePassDepth.mul(zero))
+		.add(scenePassVelocity.mul(zero))
 }
 
 async function loadModel() {
